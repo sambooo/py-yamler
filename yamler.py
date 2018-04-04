@@ -36,7 +36,18 @@ def set_path(obj, val, *path):
         obj[path[0]] = val
         return
     head, tail = path[0], path[1:]
-    set_path(obj[try_coerce(head)], val, *tail)
+    next_obj = get_and_ensure(obj, head)
+    set_path(next_obj, val, *tail)
+
+def get_and_ensure(obj, key):
+    # In the case that the existing yaml doesn't contain the intermediate keys
+    # that our change depends on, populate each such key with an empty map.
+    key = try_coerce(key)
+    try:
+        return obj[key]
+    except KeyError:
+        obj[key] = dict()
+        return obj[key]
 
 def try_coerce(val):
     # For the purposes of indexing lists, attempt to coerce all keys to
