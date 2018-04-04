@@ -1,10 +1,25 @@
 import sys
+import argparse
 from pathlib import Path
 from ruamel.yaml import YAML
 from ruamel.yaml.compat import StringIO
 
+y = YAML()
+
+def main():
+    args = parse_args()
+    docs = load_stream(args.source)
+    set_path(docs, args.value, *args.path)
+    y.dump_all(docs, sys.stdout)
+
+def parse_args():
+    p = argparse.ArgumentParser()
+    p.add_argument("--source", default="-")
+    p.add_argument("--path", default=[], nargs="+")
+    p.add_argument("--value", required=True)
+    return p.parse_args()
+
 def load_stream(path):
-    y = YAML()
     if path == "-":
         stream = sys.stdin
     else:
@@ -12,20 +27,31 @@ def load_stream(path):
     docs = y.load_all(stream)
     return list(docs)
 
-def dump_to_string(docs):
-    y = YAML()
-    s = StringIO()
-    y.dump_all(docs, s)
-    return s.getvalue()
-
-def get_path(obj, *args):
-    if len(args) == 0:
-        return obj
-    head, tail = args[0], args[1:]
-    return get_path(obj[try_coerce(head)], *tail)
+def set_path(obj, val, *path):
+    if len(path) == 0:
+        # Either no path was given, or we somehow traversed too far.
+        # Regardless, assigning directly to `obj` is a no-op so do nothing.
+        return
+    if len(path) == 1:
+        obj[path[0]] = val
+        return
+    head, tail = path[0], path[1:]
+    set_path(obj[try_coerce(head)], val, *tail)
 
 def try_coerce(val):
+    # For the purposes of indexing lists, attempt to coerce all keys to
+    # integers. In the case that we're indexing a map, both string and int
+    # will work, so no special case is required.
     try:
         return int(val)
     except ValueError:
         return val
+
+def dump_to_string(docs):
+    # This exists solely to make life easier when running in a REPL.
+    s = StringIO()
+    y.dump_all(docs, s)
+    return s.getvalue()
+
+if __name__ == "__main__":
+    main()
