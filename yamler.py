@@ -14,9 +14,9 @@ def main():
 
 def parse_args():
     p = argparse.ArgumentParser()
-    p.add_argument("--source", default="-")
-    p.add_argument("--path", default=[], nargs="+")
-    p.add_argument("--value", required=True)
+    p.add_argument("--source", default="-", help="The yaml source; either a filename or '-' for STDIN")
+    p.add_argument("--path", default=[], nargs="+", help="The keys/indices to traverse to reach the value which must be updated")
+    p.add_argument("--value", required=True, help="The value to be set at the given key")
     return p.parse_args()
 
 def load_stream(path):
