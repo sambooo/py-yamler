@@ -5,6 +5,8 @@ from ruamel.yaml import YAML
 from ruamel.yaml.compat import StringIO
 
 y = YAML()
+y.explicit_start = True
+y.preserve_quotes = True
 
 def main():
     args = parse_args()
