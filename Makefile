@@ -1,9 +1,16 @@
-.PHONY: all
+.PHONY: all image
 
-all: local image
+AUTHOR ?= samb1729
+PROJECT := yamler
+TAG ?= latest
+IMAGE := $(AUTHOR)/$(PROJECT):$(TAG)
 
-local:
-	pyinstaller --onefile yamler.py
+SOURCES := $(shell find . -type f -maxdepth 1 -name '*.py')
 
-image:
-	docker build -t yamler .
+all: image
+
+image: $(SOURCES) Dockerfile .dockerignore
+	docker build \
+		-t $(IMAGE) \
+		-f Dockerfile \
+		.

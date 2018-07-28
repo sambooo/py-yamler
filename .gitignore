@@ -1,6 +1,0 @@
-*.yaml
-/__pycache__
-/.direnv
-/build
-/dist
-yamler.spec
