@@ -40,4 +40,20 @@ spec:
       - name: bar
         image: baz
 EOF
+
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: foo
+  hello: there
+spec:
+  template:
+    metadata:
+      labels:
+        name: foo
+    spec:
+      containers:
+      - name: bar
+        image: baz
 ```
