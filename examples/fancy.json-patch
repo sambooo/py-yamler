@@ -1,0 +1,7 @@
+[
+  { "op": "replace", "path": "/0/baz", "value": "boo" },
+  { "op": "add", "path": "/0/hello", "value": ["world"] },
+  { "op": "remove", "path": "/0/foo" },
+  { "op": "move", "from": "/0/from", "path": "/0/to" },
+  { "op": "test", "path": "/0/to", "value": 123 }
+]

@@ -1,0 +1,4 @@
+[
+  {"op":"add","path":"/0/check","value":["this"]},
+  {"op":"add","path":"/0/check/1","value":"out"}
+]

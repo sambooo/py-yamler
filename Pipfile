@@ -5,7 +5,8 @@ name = "pypi"
 
 [packages]
 pathlib = "==1.0.1"
-"ruamel.yaml" = "==0.15.37"
+"ruamel.yaml" = "==0.15.45"
+jsonpatch = "*"
 
 [dev-packages]
 
