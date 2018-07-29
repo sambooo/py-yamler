@@ -1,9 +1,25 @@
-.PHONY: all
+.PHONY: local image
 
-all: local image
+AUTHOR ?= samb1729
+PROJECT := yamler
+TAG ?= latest
+IMAGE := $(AUTHOR)/$(PROJECT):$(TAG)
 
-local:
-	pyinstaller --onefile yamler.py
+SOURCES := $(shell find . -type f -maxdepth 1 -name '*.py')
 
-image:
-	docker build -t yamler .
+local: pipenv-installed
+	pipenv install
+
+pipenv-installed: python-installed
+	@which pipenv > /dev/null \
+		|| pip install pipenv
+
+python-installed:
+	@which python > /dev/null \
+		|| (echo "python not installed" && exit 1)
+
+image: $(SOURCES) Dockerfile .dockerignore
+	docker build \
+		-t $(IMAGE) \
+		-f Dockerfile \
+		.
