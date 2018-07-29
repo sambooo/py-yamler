@@ -1,4 +1,4 @@
-.PHONY: local image
+.PHONY: local image image-push
 
 AUTHOR ?= samb1729
 PROJECT := yamler
@@ -23,3 +23,6 @@ image: $(SOURCES) Dockerfile .dockerignore
 		-t $(IMAGE) \
 		-f Dockerfile \
 		.
+
+image-push: image
+	docker push $(IMAGE)
