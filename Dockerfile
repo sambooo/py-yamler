@@ -1,14 +1,20 @@
-FROM python:3.7.0-alpine3.8
+FROM python:3.7.0-alpine3.8 as freeze
 
-RUN pip install pipenv
+RUN pip install --no-cache-dir pipenv
 
 COPY Pipfile Pipfile.lock ./
 
 RUN apk add --virtual=install-deps gcc musl-dev
 
-RUN pipenv install --system
+RUN pipenv sync
 
-RUN apk del install-deps
+RUN pipenv run pip freeze > /requirements.txt
+
+FROM python:3.7.0-alpine3.8
+
+COPY --from=freeze /requirements.txt requirements.txt
+
+RUN pip install -r requirements.txt
 
 COPY *.py .
 
