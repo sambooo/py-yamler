@@ -27,33 +27,34 @@ Note that JSON Pointers must start with an integer part. In the case of inputs s
 $ cat <<EOF | pipenv run python yamler.py --patch='[{"op":"add", "path":"/0/metadata/hello", "value":"there"}]'
 apiVersion: extensions/v1beta1
 kind: Deployment
-metadata:
+metadata: # comments are preserved
   name: foo
-  hello: there
 spec:
   template:
     metadata:
       labels:
-        name: foo
+        name: "foo" # as are quotes
     spec:
       containers:
       - name: bar
         image: baz
+      - {"name": "json"} # and unusual formatting
 EOF
 
 ---
 apiVersion: extensions/v1beta1
 kind: Deployment
-metadata:
+metadata: # comments are preserved
   name: foo
   hello: there
 spec:
   template:
     metadata:
       labels:
-        name: foo
+        name: "foo" # as are quotes
     spec:
       containers:
       - name: bar
         image: baz
+      - {"name": "json"} # and unusual formatting
 ```
