@@ -1,4 +1,4 @@
-.PHONY: all image
+.PHONY: local image
 
 AUTHOR ?= samb1729
 PROJECT := yamler
@@ -7,7 +7,16 @@ IMAGE := $(AUTHOR)/$(PROJECT):$(TAG)
 
 SOURCES := $(shell find . -type f -maxdepth 1 -name '*.py')
 
-all: image
+local: pipenv-installed
+	pipenv install
+
+pipenv-installed: python-installed
+	@which pipenv > /dev/null \
+		|| pip install pipenv
+
+python-installed:
+	@which python > /dev/null \
+		|| (echo "python not installed" && exit 1)
 
 image: $(SOURCES) Dockerfile .dockerignore
 	docker build \
